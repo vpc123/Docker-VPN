@@ -73,6 +73,8 @@ Shadowsock客户端服务已正常运行，则结果如下：
 
 #### 配置privoxy
 
+##### 修改配置文件/etc/privoxy/config
+
     listen-address 127.0.0.1:8118 # 8118 是默认端口，不用改
     forward-socks5t / 127.0.0.1:1080 . #转发到本地端口，注意最后有个点
 
@@ -123,3 +125,24 @@ Shadowsock客户端服务已正常运行，则结果如下：
 
 ### 总结：
   解决公司内网软件包不可达问题
+
+
+关键点docker流量如果想要访问外网必须要进行以下的配置才可以。
+
+
+    vim  /usr/lib/systemd/system/docker.service
+
+
+在文件中：
+
+    [Service]
+    Type=notify
+    #下面进行流量转发过程的自动导向
+    Environment="ALL_PROXY=socks5://127.0.0.1:1080/"
+
+
+流量转发端口就是你配置的流量转发口，这是很重要的，也很关键的位置。
+不然你的docker本身是启动不起来的。
+
+好运！
+
